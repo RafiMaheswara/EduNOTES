@@ -862,18 +862,39 @@ const i18n = {
                 <ul style="font-size:13px; color:var(--text-muted); line-height:1.6; padding-left:16px;">
         `;
                 
-        tugasAktif.slice(0, 3).forEach((t, index) => {
+       tugasAktif.slice(0, 3).forEach((t, index) => {
             // Terjemahkan "Tanpa Kategori" secara dinamis
             const dispMapel = (t.mapel === 'Tanpa Kategori' && currentLang === 'EN') ? 'Uncategorized' : t.mapel;
             
+            // Variabel dinamis untuk kata penghubung waktu
+            const atText = currentLang === 'ID' ? 'pukul' : 'at';
+
+            // Format tanggal agar lebih rapi
+            const locale = currentLang === 'ID' ? 'id-ID' : 'en-US';
+            const dObj = new Date(`${t.deadline}T00:00:00`);
+            const formattedDate = dObj.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            // --- LOGIKA FORMAT JAM (AM/PM) ---
+            let formattedTime = t.jam; // Default: format 24 jam (misal 18:41)
+            
+            if (currentLang === 'EN') {
+                let [hour, minute] = t.jam.split(':');
+                let h = parseInt(hour);
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                
+                h = h % 12; // Konversi format 24 ke 12
+                h = h ? h : 12; // Jika h adalah 0 (tengah malam), ubah menjadi 12
+                
+                formattedTime = `${h}:${minute} ${ampm}`; // Gabungkan jadi "6:41 PM"
+            }
+
             rundownHTML += `
                 <li style="margin-bottom:8px;">
                     <strong style="color:#fff">${t.judul}</strong><br>
                     ${courseText} ${dispMapel}<br>
-                    ${dueText} ${t.deadline} pukul ${t.jam}
+                    ${dueText} ${formattedDate} ${atText} ${formattedTime}
                 </li>`;
         });
-
         rundownHTML += `</ul></div>`;
         
         const btnHtml = `
