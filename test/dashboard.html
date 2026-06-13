@@ -220,8 +220,11 @@
                 <div id="calendar-grid"></div>
             </div>
             <div id="agenda-panel" style="display: none; background: var(--card-dark); padding: 24px; border-radius: 16px; border: 1px solid #333; margin-top: 24px;">
-                <h3 style="font-size:18px; margin-bottom:16px; color:#fff;">Agenda: <span id="agenda-date" style="color:var(--edunotes-blue);"></span></h3>
-                <div class="task-grid" id="agenda-task-grid"></div>
+                <h3 style="font-size:18px; margin-bottom:16px; color:#fff;">
+                    <span class="i18n" data-id="Agenda:" data-en="Agenda:">Agenda:</span> 
+                    <span id="agenda-date" style="color:var(--edunotes-blue);"></span>
+            </h3>
+                <div class="task-grid" id="agenda-task-grid">Tidak ada tugas untuk tanggal ini.</div>
             </div>
         </div>
 
@@ -352,22 +355,36 @@
 <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
     <div class="modal-window">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-            <h2 style="font-size:18px; font-weight:700; color:#fff;"><i class="fa-solid fa-plus" style="color:var(--edunotes-blue); margin-right:8px;"></i>Tambah Tugas Baru</h2>
+            <h2 style="font-size:18px; font-weight:700; color:#fff;">
+                <i class="fa-solid fa-plus" style="color:var(--edunotes-blue); margin-right:8px;"></i>
+                <span class="i18n" data-id="Tambah Tugas Baru" data-en="Add New Task">Tambah Tugas Baru</span>
+            </h2>
             <i class="fa-solid fa-xmark" onclick="toggleModal()" style="cursor:pointer; color:var(--text-muted); font-size:18px;"></i>
         </div>
         <div style="display:flex; flex-direction:column; gap:18px;">
-            <div><label class="modal-label">Judul Tugas</label><input class="modal-input" id="input-judul" type="text" placeholder="Contoh: Laporan IMK"></div>
-            <div><label class="modal-label">Mata Kuliah</label><input class="modal-input" id="input-mapel" type="text" placeholder="Contoh: Desain Pengalaman Pengguna"></div>
-            <div><label class="modal-label">Deadline & Jam (Wajib)</label><input class="modal-input" id="input-deadline" type="datetime-local"></div>
+            <div>
+                <label class="modal-label i18n" data-id="Judul Tugas" data-en="Task Title">Judul Tugas</label>
+                <input class="modal-input" id="input-judul" type="text" placeholder="Contoh: Laporan IMK">
+            </div>
+            <div>
+                <label class="modal-label i18n" data-id="Mata Kuliah" data-en="Course">Mata Kuliah</label>
+                <input class="modal-input" id="input-mapel" type="text" placeholder="Contoh: Desain Pengalaman Pengguna">
+            </div>
+            <div>
+                <label class="modal-label i18n" data-id="Deadline & Jam (Wajib)" data-en="Deadline & Time (Required)">Deadline & Jam (Wajib)</label>
+                <input class="modal-input" id="input-deadline" type="datetime-local">
+            </div>
             <div>
                 <label class="modal-label" style="display:flex; align-items:center; gap:6px;">
-                    <i class="fa-regular fa-eye" style="color:var(--edunotes-blue);"></i> Deskripsi <span style="font-weight:400; color:#555;">(opsional)</span>
+                    <i class="fa-regular fa-eye" style="color:var(--edunotes-blue);"></i> 
+                    <span class="i18n" data-id="Deskripsi" data-en="Description">Deskripsi</span> 
+                    <span style="font-weight:400; color:#555;" class="i18n" data-id="(opsional)" data-en="(optional)">(opsional)</span>
                 </label>
                 <textarea class="modal-input" id="input-deskripsi" rows="3" placeholder="Catatan tambahan, referensi, atau detail tugas..." style="resize:vertical; min-height:80px; font-family:'Inter',sans-serif;"></textarea>
             </div>
             <div style="display:flex; gap:12px; margin-top:10px;">
-                <button onclick="toggleModal()" style="flex:1; background:transparent; border:1px solid #444; color:var(--text-muted); padding:12px; border-radius:10px; cursor:pointer; font-weight:600;">Batal</button>
-                <button onclick="simpanTugas()" style="flex:2; background:var(--edunotes-blue); border:none; color:#fff; padding:12px; border-radius:10px; cursor:pointer; font-weight:700;">Simpan</button>
+                <button onclick="toggleModal()" class="i18n" data-id="Batal" data-en="Cancel" style="flex:1; background:transparent; border:1px solid #444; color:var(--text-muted); padding:12px; border-radius:10px; cursor:pointer; font-weight:600;">Batal</button>
+                <button onclick="simpanTugas()" class="i18n" data-id="Simpan" data-en="Save" style="flex:2; background:var(--edunotes-blue); border:none; color:#fff; padding:12px; border-radius:10px; cursor:pointer; font-weight:700;">Simpan</button>
             </div>
         </div>
     </div>
@@ -441,27 +458,34 @@ const i18n = {
     'Tidak ada tugas pada kategori ini.' : { en: 'No tasks in this category.' },
 };
     function toggleLang() {
-        currentLang = currentLang === 'ID' ? 'EN' : 'ID';
-        document.getElementById('lang-label').innerText = currentLang;
+    currentLang = currentLang === 'ID' ? 'EN' : 'ID';
+    document.getElementById('lang-label').innerText = currentLang;
 
-        // 1. Teks Statis di HTML
-        document.querySelectorAll('.i18n').forEach(el => {
-            el.innerText = currentLang === 'EN' ? el.dataset.en : el.dataset.id;
-        });
+    // 1. Teks Statis di HTML
+    document.querySelectorAll('.i18n').forEach(el => {
+        el.innerText = currentLang === 'EN' ? el.dataset.en : el.dataset.id;
+    });
 
-        // 2. Teks Placeholder Input
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            searchInput.placeholder = currentLang === 'EN' ? 'Search tasks...' : 'Cari tugas...';
-        }
+    // 2. Teks Placeholder Input (Search & Modal Tambah Tugas)
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.placeholder = currentLang === 'EN' ? 'Search tasks...' : 'Cari tugas...';
+    
+    const inputJudul = document.getElementById('input-judul');
+    if (inputJudul) inputJudul.placeholder = currentLang === 'EN' ? 'Example: assignment report' : 'Contoh: Laporan IMK';
+    
+    const inputMapel = document.getElementById('input-mapel');
+    if (inputMapel) inputMapel.placeholder = currentLang === 'EN' ? 'Example: User Experience Design' : 'Contoh: Desain Pengalaman Pengguna';
+    
+    const inputDesc = document.getElementById('input-deskripsi');
+    if (inputDesc) inputDesc.placeholder = currentLang === 'EN' ? 'Additional notes, references, or task details...' : 'Catatan tambahan, referensi, atau detail tugas...';
 
-        // 3. Teks Dinamis: Render ulang komponen agar ikut berubah
-        const activePage = document.querySelector('.nav-item.active').id.replace('nav-', '');
-        showPage(activePage); 
-        renderAIPanel();
+    // 3. Teks Dinamis: Render ulang komponen agar ikut berubah
+    const activePage = document.querySelector('.nav-item.active').id.replace('nav-', '');
+    showPage(activePage); 
+    renderAIPanel();
 
-        showToast(currentLang === 'EN' ? 'Language: English' : 'Bahasa: Indonesia', 'var(--normal-teal)');
-    }
+    showToast(currentLang === 'EN' ? 'Language: English' : 'Bahasa: Indonesia', 'var(--normal-teal)');
+}
     let allTasks = [
         
     ];
@@ -676,18 +700,46 @@ const i18n = {
     }
 
     function lihatAgendaTanggal(dateStr) {
-        document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('selected'));
-        const panel = document.getElementById('agenda-panel'); const grid = document.getElementById('agenda-task-grid');
-        const tasksOnDate = allTasks.filter(t => t.deadline === dateStr);
-        document.getElementById('agenda-date').innerText = new Date(dateStr).toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long'});
-        grid.innerHTML = '';
-        if (tasksOnDate.length === 0) grid.innerHTML = `<p style="color:var(--text-muted); font-size:14px; font-style:italic;">Tidak ada agenda.</p>`;
-        else tasksOnDate.forEach(t => {
+    document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('selected'));
+    const panel = document.getElementById('agenda-panel'); 
+    const grid = document.getElementById('agenda-task-grid');
+    const tasksOnDate = allTasks.filter(t => t.deadline === dateStr);
+    
+    // Tentukan locale kalender berdasarkan bahasa
+    const locale = currentLang === 'ID' ? 'id-ID' : 'en-US';
+    document.getElementById('agenda-date').innerText = new Date(dateStr).toLocaleDateString(locale, {weekday:'long', day:'numeric', month:'long'});
+    
+    grid.innerHTML = '';
+    if (tasksOnDate.length === 0) {
+        const emptyText = currentLang === 'ID' ? 'Tidak ada agenda.' : 'No agenda for this date.';
+        grid.innerHTML = `<p style="color:var(--text-muted); font-size:14px; font-style:italic;">${emptyText}</p>`;
+    } else {
+        tasksOnDate.forEach(t => {
             const urg = hitungUrgensi(t.deadline, t.jam);
-            grid.innerHTML += `<div class="task-card ${t.status === 'aktif' ? urg.kelas : 'normal'}" style="padding:16px;"> <h3 style="font-size:14px; color:#fff;">${t.judul}</h3> <p style="color:var(--text-muted); font-size:12px;">${t.mapel}</p> <span class="badge" style="color:${t.status === 'aktif'? urg.warna : 'var(--text-muted)'}">${t.status === 'aktif'? '⏰ ' + t.jam : t.status.toUpperCase()}</span> </div>`;
+            
+            // Terjemahkan Tanpa Kategori
+            const dispMapel = (t.mapel === 'Tanpa Kategori' && currentLang === 'EN') ? 'Uncategorized' : t.mapel;
+            
+            // Terjemahkan label status jika tugas sudah tidak aktif (Selesai/Terlewat/Dihapus)
+            let dispStatus = t.status.toUpperCase();
+            if (currentLang === 'EN') {
+                if (t.status === 'selesai') dispStatus = 'COMPLETED';
+                if (t.status === 'terlewat') dispStatus = 'OVERDUE';
+                if (t.status === 'dihapus') dispStatus = 'DELETED';
+            }
+            
+            const badgeText = t.status === 'aktif' ? '⏰ ' + t.jam : dispStatus;
+            
+            grid.innerHTML += `
+                <div class="task-card ${t.status === 'aktif' ? urg.kelas : 'normal'}" style="padding:16px;"> 
+                    <h3 style="font-size:14px; color:#fff;">${t.judul}</h3> 
+                    <p style="color:var(--text-muted); font-size:12px;">${dispMapel}</p> 
+                    <span class="badge" style="color:${t.status === 'aktif'? urg.warna : 'var(--text-muted)'}">${badgeText}</span> 
+                </div>`;
         });
-        panel.style.display = 'block';
     }
+    panel.style.display = 'block';
+}
 
     function toggleAIPanel() {
         document.getElementById('appContainer').classList.toggle('panel-closed');
@@ -711,7 +763,6 @@ const i18n = {
     }
 
     // --- AI PANEL: RENDER DINAMIS & PERINGATAN < 2 JAM ---
-    // --- AI PANEL: RENDER DINAMIS & PERINGATAN < 2 JAM ---
     function renderAIPanel() {
         const body = document.getElementById('ai-panel-body');
         if (!body) return;
@@ -733,13 +784,16 @@ const i18n = {
                 const titleCrit = currentLang === 'ID' ? 'TENGGAT KRITIS!' : 'CRITICAL DEADLINE!';
                 const minText = currentLang === 'ID' ? 'menit lagi' : 'mins left';
                 
+                // Terjemahkan "Tanpa Kategori" secara dinamis
+                const dispMapel = (t.mapel === 'Tanpa Kategori' && currentLang === 'EN') ? 'Uncategorized' : t.mapel;
+                
                 body.innerHTML += `
                     <div class="suggestion-box" style="border-left: 3px solid var(--urgent-red); animation: fadeIn 0.3s ease;">
                         <h4 style="font-size:13px; margin-bottom:6px; color:var(--urgent-red); display:flex; align-items:center; gap:6px;">
                             <i class="fa-solid fa-triangle-exclamation"></i> ${titleCrit}
                         </h4>
                         <p style="font-size:13px; color:#fff; font-weight:700; margin-bottom:4px;">${t.judul}</p>
-                        <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:6px;">${t.mapel}</p>
+                        <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:6px;">${dispMapel}</p>
                         <span style="font-size:11px; font-weight:800; color:var(--urgent-red); background:rgba(255,71,87,0.1); padding:3px 8px; border-radius:4px;">
                             ⏰ ${diffMin} ${minText}
                         </span>
@@ -759,13 +813,16 @@ const i18n = {
             const urg = hitungUrgensi(terdekat.deadline, terdekat.jam);
             const focusText = currentLang === 'ID' ? 'Fokus Berikutnya' : 'Next Focus';
             
+            // Terjemahkan "Tanpa Kategori" secara dinamis
+            const dispMapel = (terdekat.mapel === 'Tanpa Kategori' && currentLang === 'EN') ? 'Uncategorized' : terdekat.mapel;
+            
             body.innerHTML += `
                 <div class="suggestion-box" style="border-left: 3px solid var(--warning-yellow);">
                     <h4 style="font-size:13px; margin-bottom:6px; color:var(--warning-yellow); display:flex; align-items:center; gap:6px;">
                         <i class="fa-solid fa-bell"></i> ${focusText}
                     </h4>
                     <p style="font-size:13px; color:#fff; font-weight:700; margin-bottom:4px;">${terdekat.judul}</p>
-                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">${terdekat.mapel}</p>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">${dispMapel}</p>
                     <span style="font-size:11px; font-weight:800; color:${urg.warna}; background:${urg.warna}1a; padding:3px 8px; border-radius:4px;">
                         ${urg.label}
                     </span>
@@ -778,7 +835,7 @@ const i18n = {
             </button>`;
     }
 
-    // --- FITUR 1: AI GENERATE JADWAL ---
+    // --- FITUR AI GENERATE JADWAL ---
     function generateJadwalAI() {
         const aiContainer = document.querySelector('.ai-panel > div:nth-child(2)');
         let tugasAktif = allTasks.filter(t => t.status === 'aktif');
@@ -806,11 +863,14 @@ const i18n = {
         `;
                 
         tugasAktif.slice(0, 3).forEach((t, index) => {
+            // Terjemahkan "Tanpa Kategori" secara dinamis
+            const dispMapel = (t.mapel === 'Tanpa Kategori' && currentLang === 'EN') ? 'Uncategorized' : t.mapel;
+            
             rundownHTML += `
                 <li style="margin-bottom:8px;">
                     <strong style="color:#fff">${t.judul}</strong><br>
-                    ${courseText} ${t.mapel}<br>
-                    ${dueText} ${t.deadline} ${t.jam}
+                    ${courseText} ${dispMapel}<br>
+                    ${dueText} ${t.deadline} pukul ${t.jam}
                 </li>`;
         });
 
@@ -824,50 +884,6 @@ const i18n = {
         
         aiContainer.innerHTML = rundownHTML + btnHtml;
         showToast(currentLang === 'ID' ? "Jadwal optimal berhasil dibuat!" : "Optimal schedule generated!", "var(--normal-teal)");
-    }
-
-    // --- FITUR AI GENERATE JADWAL ---
-    function generateJadwalAI() {
-        const aiContainer = document.querySelector('.ai-panel > div:nth-child(2)');
-        let tugasAktif = allTasks.filter(t => t.status === 'aktif');
-        
-        if (tugasAktif.length === 0) {
-            showToast("Tidak ada tugas aktif untuk dijadwalkan!", "var(--warning-yellow)");
-            return;
-        }
-
-        tugasAktif.sort((a, b) => {
-            return new Date(`${a.deadline}T${a.jam}`) - new Date(`${b.deadline}T${b.jam}`);
-        });
-
-        let rundownHTML = `
-            <div class="suggestion-box" style="border-left: 3px solid var(--edunotes-blue);">
-                <h4 style="font-size:14px; margin-bottom:10px;">
-                    <i class="fa-solid fa-list-check" style="color:var(--edunotes-blue); margin-right:4px;"></i> Rundown Disarankan:
-                </h4>
-                <ul style="font-size:13px; color:var(--text-muted); line-height:1.6; padding-left:16px;">
-        `;
-                
-        tugasAktif.slice(0, 3).forEach((t, index) => {
-            let estimasiJam = 2 - (index * 0.5); 
-            rundownHTML += `
-                <li style="margin-bottom:8px;">
-                    <strong style="color:#fff">${t.judul}</strong><br>
-                    Mata Kuliah: ${t.mapel}<br>
-                    Batas Waktu: ${t.deadline} pukul ${t.jam}
-                </li>`;
-        });
-
-        rundownHTML += `</ul></div>`;
-        
-        const btnHtml = `
-            <button onclick="generateJadwalAI()" style="width:100%; background:#2a2a2a; color:#fff; border:1px solid #444; padding:12px; border-radius:8px; cursor:pointer; font-weight:600;">
-                <i class="fa-solid fa-rotate-right" style="color:#fff; margin-right:4px;"></i> Regenerate Jadwal
-            </button>
-        `;
-        
-        aiContainer.innerHTML = rundownHTML + btnHtml;
-        showToast("Jadwal optimal berhasil dibuat!", "var(--normal-teal)");
     }
 
     // --- FITUR FILTER RIWAYAT ---
